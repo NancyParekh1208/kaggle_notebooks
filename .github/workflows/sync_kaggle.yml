@@ -27,6 +27,11 @@ jobs:
           ls -la ~/.kaggle
           cat ~/.kaggle/kaggle.json
 
+      - name: Validate kaggle.json with jq
+        run: |
+          jq . ~/.kaggle/kaggle.json
+
+
       - name: Pull Kaggle Notebook
         run: |
           mkdir -p kaggle_notebooks
