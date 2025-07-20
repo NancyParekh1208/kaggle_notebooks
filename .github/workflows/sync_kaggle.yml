@@ -24,6 +24,9 @@ jobs:
       - name: Pull Kaggle Notebook
         run: |
           mkdir -p kaggle_notebooks
+      - name: Check kaggle.json
+        run: cat ~/.kaggle/kaggle.json
+
           kaggle kernels pull nancyaparekh/learn-pytorch-with-me -p kaggle_notebooks --force
 
       - name: Commit and push changes
