@@ -1,0 +1,35 @@
+name: Sync Kaggle Notebook
+
+on:
+  workflow_dispatch:     # Manual run
+  schedule:
+    - cron: '0 6 * * *'  # Runs daily at 6:00 AM UTC
+
+jobs:
+  fetch-kaggle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Install Kaggle API
+        run: pip install kaggle
+
+      - name: Setup Kaggle credentials
+        run: |
+          mkdir -p ~/.kaggle
+          echo "${{ secrets.KAGGLE_JSON }}" > ~/.kaggle/kaggle.json
+          chmod 600 ~/.kaggle/kaggle.json
+
+      - name: Pull Kaggle Notebook
+        run: |
+          mkdir -p kaggle_notebooks
+          kaggle kernels pull nancyaparekh/learn-pytorch-with-me -p kaggle_notebooks --force
+
+      - name: Commit and push changes
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add kaggle_notebooks
+          git commit -m "Sync: Updated from Kaggle" || echo "No changes"
+          git push
