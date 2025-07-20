@@ -20,13 +20,16 @@ jobs:
           mkdir -p ~/.kaggle
           echo "${{ secrets.KAGGLE_JSON }}" > ~/.kaggle/kaggle.json
           chmod 600 ~/.kaggle/kaggle.json
+          
+      - name: ✅ Confirm kaggle.json exists
+        run: |
+          echo "Checking if kaggle.json exists:"
+          ls -la ~/.kaggle
+          cat ~/.kaggle/kaggle.json
 
       - name: Pull Kaggle Notebook
         run: |
           mkdir -p kaggle_notebooks
-      - name: Check kaggle.json
-        run: cat ~/.kaggle/kaggle.json
-
           kaggle kernels pull nancyaparekh/learn-pytorch-with-me -p kaggle_notebooks --force
 
       - name: Commit and push changes
