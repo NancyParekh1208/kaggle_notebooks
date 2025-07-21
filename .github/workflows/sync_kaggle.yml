@@ -1,9 +1,9 @@
 name: Sync Kaggle Notebook
 
 on:
-  workflow_dispatch:     # Manual run
+  workflow_dispatch:
   schedule:
-    - cron: '0 6 * * *'  # Runs daily at 6:00 AM UTC
+    - cron: '0 6 * * *'  # Daily at 6 AM UTC
 
 jobs:
   fetch-kaggle:
@@ -15,22 +15,14 @@ jobs:
       - name: Install Kaggle API
         run: pip install kaggle
 
-      - name: Setup Kaggle credentials
+      - name: Setup Kaggle credentials from separate secrets
         run: |
           mkdir -p ~/.kaggle
-          echo "${{ secrets.KAGGLE_JSON }}" > ~/.kaggle/kaggle.json
+          echo "{\"username\":\"${{ secrets.KAGGLE_USERNAME }}\",\"key\":\"${{ secrets.KAGGLE_KEY }}\"}" > ~/.kaggle/kaggle.json
           chmod 600 ~/.kaggle/kaggle.json
-          
-      - name: ✅ Confirm kaggle.json exists
-        run: |
-          echo "Checking if kaggle.json exists:"
-          ls -la ~/.kaggle
-          cat ~/.kaggle/kaggle.json
 
-      - name: Validate kaggle.json with jq
-        run: |
-          jq . ~/.kaggle/kaggle.json
-
+      - name: Validate kaggle.json (optional debug)
+        run: jq . ~/.kaggle/kaggle.json
 
       - name: Pull Kaggle Notebook
         run: |
