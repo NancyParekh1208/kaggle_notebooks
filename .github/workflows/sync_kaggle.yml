@@ -24,10 +24,11 @@ jobs:
       - name: Validate kaggle.json (optional debug)
         run: jq . ~/.kaggle/kaggle.json
 
-      - name: Pull Kaggle Notebook
+      - name: Pull Kaggle Notebook (clean pull)
         run: |
+          rm -rf kaggle_notebooks
           mkdir -p kaggle_notebooks
-          kaggle kernels pull nancyaparekh/learn-pytorch-with-me -p kaggle_notebooks --force
+          kaggle kernels pull nancyaparekh/learn-pytorch-with-me -p kaggle_notebooks
 
       - name: Commit and push changes
         run: |
